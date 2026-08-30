@@ -45,7 +45,7 @@ jobs:
           if-no-files-found: error
 
       - name: Upload VSIX to GitHub Release
-        if: github.event_name == 'push'
+        if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.tag_name != '')
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.TAG_NAME }}
