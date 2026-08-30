@@ -1,0 +1,161 @@
+{
+  "name": "vscode-renpy-label-tool",
+  "displayName": "Ren'Py Label Tool",
+  "description": "Validates Ren'Py jump/call targets and lists every label or screen reference that does not exist.",
+  "version": "0.1.0",
+  "publisher": "local",
+  "license": "GPL-2.0-only",
+  "private": true,
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "keywords": [
+    "renpy",
+    "visual-novel",
+    "label",
+    "jump",
+    "call"
+  ],
+  "categories": [
+    "Linters",
+    "Other"
+  ],
+  "scripts": {
+    "package": "vsce package"
+  },
+  "activationEvents": [
+    "workspaceContains:**/*.rpy",
+    "workspaceContains:**/*.rpym"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "renpyLabelTool.showMissingOverview",
+        "title": "Ren'Py: Show Missing Label Overview",
+        "icon": "$(list-selection)"
+      },
+      {
+        "command": "renpyLabelTool.insertLabel",
+        "title": "Ren'Py: Insert Label From Project",
+        "icon": "$(symbol-method)"
+      },
+      {
+        "command": "renpyLabelTool.rescan",
+        "title": "Ren'Py: Rescan Labels And Screens",
+        "icon": "$(refresh)"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "renpyLabelTool.showMissingOverview",
+          "when": "resourceExtname == .rpy || resourceExtname == .rpym",
+          "group": "navigation@1"
+        },
+        {
+          "command": "renpyLabelTool.insertLabel",
+          "when": "resourceExtname == .rpy || resourceExtname == .rpym",
+          "group": "navigation@2"
+        },
+        {
+          "command": "renpyLabelTool.rescan",
+          "when": "resourceExtname == .rpy || resourceExtname == .rpym",
+          "group": "navigation@3"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Ren'Py Label Tool",
+      "properties": {
+        "renpyLabelTool.scanRoots": {
+          "type": "array",
+          "default": [
+            "game"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "Workspace-relative folders to scan for .rpy/.rpym files. If none of them exist, the workspace root is scanned instead."
+        },
+        "renpyLabelTool.excludeGlobs": {
+          "type": "array",
+          "default": [
+            "**/renpy/**",
+            "**/node_modules/**",
+            "**/python-packages/**",
+            "**/cache/**",
+            "**/saves/**"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "Glob patterns excluded from the scan."
+        },
+        "renpyLabelTool.checkLabels": {
+          "type": "boolean",
+          "default": true,
+          "description": "Report jump/call statements whose label target does not exist."
+        },
+        "renpyLabelTool.checkScreens": {
+          "type": "boolean",
+          "default": true,
+          "description": "Report call screen, show screen, hide screen and use statements whose screen does not exist."
+        },
+        "renpyLabelTool.checkExpressionStrings": {
+          "type": "boolean",
+          "default": true,
+          "description": "Validate string literals used by 'jump expression', 'call expression' and helpers such as renpy.jump(\"name\")."
+        },
+        "renpyLabelTool.reportDynamicTargets": {
+          "type": "boolean",
+          "default": false,
+          "description": "Also report targets that are computed at runtime and therefore cannot be verified."
+        },
+        "renpyLabelTool.ignoredLabels": {
+          "type": "array",
+          "default": [
+            "after_load",
+            "after_warp",
+            "before_main_menu",
+            "hide_windows",
+            "main_menu",
+            "quit",
+            "splashscreen",
+            "start",
+            "_invoke_main_menu"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "Label names that are never reported as missing, for example engine entry points."
+        },
+        "renpyLabelTool.ignoredScreens": {
+          "type": "array",
+          "default": [
+            "about",
+            "choice",
+            "confirm",
+            "help",
+            "history",
+            "input",
+            "load",
+            "main_menu",
+            "navigation",
+            "notify",
+            "nvl",
+            "preferences",
+            "quick_menu",
+            "save",
+            "say",
+            "skip_indicator"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "Screen names that are never reported as missing, for example engine-provided screens."
+        }
+      }
+    }
+  }
+}
